@@ -9,5 +9,9 @@ brew install curl html-xml-utils
 </pre>
 
 ## Usage
+<pre lang="bash">
+<code>
 ./search Ilari Mäkelä
+</code>
+</pre>
 
