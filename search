@@ -14,26 +14,26 @@ useragent="request"
 header="Content-Type: application/x-www-form-urlencoded"
 url="$(printf 'http://www.google.com/search?hl=&q=%s&start=0&sa=N&num=10&ie=UTF-8&oe=UTF-8' "$query")"
 
-curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null | \
-    hxnormalize -x -l 1000 2>/dev/null | \
-    hxselect -i -s '|||' '.g' | \
-    tr '\n' ' ' | \
-    sed $'s/|||/\\\n/g' | \
-    sed 's/  */ /g' | \
+curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null |
+    hxnormalize -x -l 1000 2>/dev/null |
+    hxselect -i -s '|||' '.g' |
+    tr '\n' ' ' |
+    sed $'s/|||/\\\n/g' |
+    sed 's/  */ /g' |
     while read LINE
     do
         result="$(echo $LINE | hxnormalize -x -l 1000)"
 
-        title="$(echo $result | \
-            hxselect -c h3 a | \
+        title="$(echo $result |
+            hxselect -c h3 a |
             sed -e 's/<b>//g' -e 's|</b>||g' )"
-        link="$(echo $result | hxselect -c 'cite' | \
-            sed 's/<\\?b>//g' | \
+        link="$(echo $result | hxselect -c 'cite' |
+            sed 's/<\\?b>//g' |
             sed -e 's/<b>//g' -e 's|</b>||g' )"
-        meta="$(echo $result | \
-            hxselect -c .st | \
-            hxremove span.f | \
-            hxunent | \
+        meta="$(echo $result |
+            hxselect -c .st |
+            hxremove span.f |
+            hxunent |
             sed -e 's/<b>/\\033[1m/g' -e 's|</b>|\\033[0m|g' )"
 
         echo -e "\033[34m$title\033[0m"
