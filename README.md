@@ -15,3 +15,8 @@ brew install curl html-xml-utils
 </code>
 </pre>
 
+If you wan't want color on the output, you can set the NOCOLOR variable:
+<code>
+NOCOLOR=1 ./search Ilari Mäkelä
+</code>
+</pre>

@@ -30,14 +30,27 @@ curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null |
         link="$(echo $result | hxselect -c 'cite' |
             sed 's/<\\?b>//g' |
             sed -e 's/<b>//g' -e 's|</b>||g' )"
-        meta="$(echo $result |
-            hxselect -c .st |
-            hxremove span.f |
-            hxunent |
-            sed -e 's/<b>/\\033[1m/g' -e 's|</b>|\\033[0m|g' )"
+ 
+        if [ -z "${NOCOLOR+x}" ]
+        then
+            meta="$(echo $result |
+                hxselect -c .st |
+                hxremove span.f |
+                hxunent |
+                sed -e 's/<b>/\\033[1m/g' -e 's|</b>|\\033[0m|g' )"
 
-        echo -e "\033[34m$title\033[0m"
-        echo -e "\033[32m$link\033[0m"
+            echo -e "\033[34m$title\033[0m"
+            echo -e "\033[32m$link\033[0m"
+        else
+            meta="$(echo $result |
+                hxselect -c .st |
+                hxremove span.f |
+                hxunent |
+                sed -e 's/<b>//g' -e 's|</b>||g' )"
+
+            echo -e "$title"
+            echo -e "$link"
+        fi
         echo -e "$meta" | \
            fold -w 80 -s
         echo
