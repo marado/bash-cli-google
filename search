@@ -31,14 +31,28 @@ curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null |
         link="$(echo $result | hxselect 'a' | cut -d\" -f2 |
             cut -d= -f2 |
             cut -d\& -f1)"
-        meta="$(echo $result |
-            hxselect -c .st |
-            hxremove span.f |
-            hxunent |
-            sed -e 's/<b>/\\033[1m/g' -e 's|</b>|\\033[0m|g' )"
 
-        echo -e "\033[34m$title\033[0m"
-        echo -e "\033[32m$link\033[0m"
+        if [ -z "${NOCOLOR+x}" ]
+        then
+            meta="$(echo $result |
+                hxselect -c .st |
+                hxremove span.f |
+                hxunent |
+                sed -e 's/<b>/\\033[1m/g' -e 's|</b>|\\033[0m|g' )"
+
+            echo -e "\033[34m$title\033[0m"
+            echo -e "\033[32m$link\033[0m"
+        else
+            meta="$(echo $result |
+                hxselect -c .st |
+                hxremove span.f |
+                hxunent |
+                sed -e 's/<b>//g' -e 's|</b>||g' )"
+
+            echo -e "$title"
+            echo -e "$link"
+        fi
+ 
         echo -e "$meta" | \
            fold -w 80 -s
         echo
