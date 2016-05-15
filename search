@@ -27,9 +27,9 @@ curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null |
         title="$(echo $result |
             hxselect -c h3 a |
             sed -e 's/<b>//g' -e 's|</b>||g' )"
-        link="$(echo $result | hxselect -c 'cite' |
-            sed 's/<\\?b>//g' |
-            sed -e 's/<b>//g' -e 's|</b>||g' )"
+        link="$(echo $result | hxselect 'a' | cut -d\" -f2 |
+            cut -d= -f2 |
+            cut -d\& -f1)"
         meta="$(echo $result |
             hxselect -c .st |
             hxremove span.f |
