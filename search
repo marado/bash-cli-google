@@ -16,6 +16,7 @@ url="$(printf 'http://www.google.com/search?hl=&q=%s&start=0&sa=N&num=10&ie=UTF-
 
 curl -A "$useragent" --header "$header" --location "$url" 2>/dev/null |
     hxnormalize -x -l 1000 2>/dev/null |
+    sed -e :a -re 's/<!.*?>//g;/<!--/N;//ba' |
     hxselect -i -s '|||' '.g' |
     tr '\n' ' ' |
     sed $'s/|||/\\\n/g' |
